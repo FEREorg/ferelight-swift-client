@@ -14,6 +14,7 @@ let testOcrText = "cabbage"
 let testResultsLimit = 10
 let alternativeTestDatabase = "mvk"
 let alternativeTestSimilarityText = "A whale shark swimming through a field"
+let testTimestamp = 0.1
 
 
 @Test func getObjectInfo() async throws {
@@ -72,4 +73,16 @@ let alternativeTestSimilarityText = "A whale shark swimming through a field"
     let client = FereLightClient(url: URL(string: host + ":" + port)!)
     let result = try await client.query(database: alternativeTestDatabase, similarityText: alternativeTestSimilarityText, ocrText: nil, limit: testResultsLimit)
     #expect(result.count == testResultsLimit)
+}
+
+@Test func queryByExample() async throws {
+    let client = FereLightClient(url: URL(string: host + ":" + port)!)
+    let result = try await client.queryByExample(database: testDatabase, segmentId: testSegmentId, limit: testResultsLimit)
+    #expect(result.count == testResultsLimit)
+}
+
+@Test func segmentByTime() async throws {
+    let client = FereLightClient(url: URL(string: host + ":" + port)!)
+    let result = try await client.segmentByTime(database: testDatabase, objectId: testObjectId, timestamp: testTimestamp)
+    #expect(result == testSegmentId)
 }
